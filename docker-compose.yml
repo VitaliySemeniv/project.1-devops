@@ -1,0 +1,37 @@
+version: '3'
+services:
+  frontend:
+    build: ./frontend  # Додай або 'build', або 'image' для цього сервісу
+    container_name: frontend
+    ports:
+      - "3000:80"
+    environment:
+      BACKEND_RDS_URL: "http://backend_rds:80/test_connection"
+      BACKEND_REDIS_URL: "http://backend_redis:80/test_connection"
+    depends_on:
+      - backend_rds
+      - backend_redis
+
+  backend_rds:
+    build: ./backend_rds
+    container_name: backend_rds
+    ports:
+      - "5001:80"
+
+  backend_redis:
+    build: ./backend_redis
+    container_name: backend_redis
+    ports:
+      - "5002:80"
+
+  nginx:
+    image: nginx:alpine  # Або вказати 'image', або 'build' для Nginx
+    container_name: nginx
+    ports:
+      - "8080:80"
+    depends_on:
+      - frontend
+      - backend_rds
+      - backend_redis
+    volumes:
+      - ./nginx.conf:/etc/nginx/nginx.conf  # Примонтування конфігурації Nginx
