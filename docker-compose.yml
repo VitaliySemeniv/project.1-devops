@@ -1,7 +1,7 @@
 version: '3'
 services:
   frontend:
-    build: ./frontend  # Додай або 'build', або 'image' для цього сервісу
+    build: ./frontend
     container_name: frontend
     ports:
       - "3000:80"
@@ -25,13 +25,9 @@ services:
       - "5002:80"
 
   nginx:
-    image: nginx:alpine  # Або вказати 'image', або 'build' для Nginx
+    image: nginx:latest
     container_name: nginx
     ports:
-      - "8080:80"
-    depends_on:
-      - frontend
-      - backend_rds
-      - backend_redis
+      - "80:80"  # Відкриває порт 80 для доступу до NGINX
     volumes:
-      - ./nginx.conf:/etc/nginx/nginx.conf  # Примонтування конфігурації Nginx
+      - ./nginx.conf:/etc/nginx/nginx.conf  # Мапінг конфігурації NGINX з локальної машини до контейнера
